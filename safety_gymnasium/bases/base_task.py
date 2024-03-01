@@ -502,29 +502,30 @@ class BaseTask(Underlying):  # pylint: disable=too-many-instance-attributes,too-
         positions = np.array(positions, ndmin=2)
         obs = np.zeros(self.lidar_conf.num_bins)
         for pos in positions:
-            pos = np.asarray(pos)
-            if pos.shape == (3,):
-                pos = pos[:2]  # Truncate Z coordinate
-            # pylint: disable-next=invalid-name
-            z = complex(*self._ego_xy(pos))  # X, Y as real, imaginary components
-            dist = np.abs(z)
-            angle = np.angle(z) % (np.pi * 2)
-            bin_size = (np.pi * 2) / self.lidar_conf.num_bins
-            bin = int(angle / bin_size)  # pylint: disable=redefined-builtin
-            bin_angle = bin_size * bin
-            if self.lidar_conf.max_dist is None:
-                sensor = np.exp(-self.lidar_conf.exp_gain * dist)
-            else:
-                sensor = max(0, self.lidar_conf.max_dist - dist) / self.lidar_conf.max_dist
-            obs[bin] = max(obs[bin], sensor)
-            # Aliasing
-            if self.lidar_conf.alias:
-                alias = (angle - bin_angle) / bin_size
-                assert 0 <= alias <= 1, f'bad alias {alias}, dist {dist}, angle {angle}, bin {bin}'
-                bin_plus = (bin + 1) % self.lidar_conf.num_bins
-                bin_minus = (bin - 1) % self.lidar_conf.num_bins
-                obs[bin_plus] = max(obs[bin_plus], alias * sensor)
-                obs[bin_minus] = max(obs[bin_minus], (1 - alias) * sensor)
+            if pos != []:
+                pos = np.asarray(pos)
+                if pos.shape == (3,):
+                    pos = pos[:2]  # Truncate Z coordinate
+                # pylint: disable-next=invalid-name
+                z = complex(*self._ego_xy(pos))  # X, Y as real, imaginary components
+                dist = np.abs(z)
+                angle = np.angle(z) % (np.pi * 2)
+                bin_size = (np.pi * 2) / self.lidar_conf.num_bins
+                bin = int(angle / bin_size)  # pylint: disable=redefined-builtin
+                bin_angle = bin_size * bin
+                if self.lidar_conf.max_dist is None:
+                    sensor = np.exp(-self.lidar_conf.exp_gain * dist)
+                else:
+                    sensor = max(0, self.lidar_conf.max_dist - dist) / self.lidar_conf.max_dist
+                obs[bin] = max(obs[bin], sensor)
+                # Aliasing
+                if self.lidar_conf.alias:
+                    alias = (angle - bin_angle) / bin_size
+                    assert 0 <= alias <= 1, f'bad alias {alias}, dist {dist}, angle {angle}, bin {bin}'
+                    bin_plus = (bin + 1) % self.lidar_conf.num_bins
+                    bin_minus = (bin - 1) % self.lidar_conf.num_bins
+                    obs[bin_plus] = max(obs[bin_plus], alias * sensor)
+                    obs[bin_minus] = max(obs[bin_minus], (1 - alias) * sensor)
         return obs
 
     def _obs_compass(self, pos: np.ndarray) -> np.ndarray:
