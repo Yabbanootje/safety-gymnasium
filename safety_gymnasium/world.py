@@ -42,6 +42,7 @@ class Engine:
 
     # pylint: disable=no-member
     model: mujoco.MjModel = None
+    base_model: mujoco.MjModel = None
     data: mujoco.MjData = None
 
     def update(self, model, data):
@@ -407,7 +408,10 @@ class World:  # pylint: disable=too-many-instance-attributes
         # Instantiate simulator
         # print(xmltodict.unparse(self.xml, pretty=True))
         self.xml_string = xmltodict.unparse(self.xml)
-        model = mujoco.MjModel.from_xml_string(self.xml_string)  # pylint: disable=no-member
+        if self.engine.base_model == None:
+            self.engine.base_model = mujoco.MjModel.from_xml_string(self.xml_string)  # pylint: disable=no-member
+        print(self.xml_string)
+        model = deepcopy(self.engine.base_model)
         data = mujoco.MjData(model)  # pylint: disable=no-member
 
         # Recompute simulation intrinsics from new position
