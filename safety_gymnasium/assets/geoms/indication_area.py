@@ -25,15 +25,13 @@ from safety_gymnasium.bases.base_object import Geom
 
 @dataclass
 class IndicationArea(Geom):  # pylint: disable=too-many-instance-attributes
-    """None collision walls.
-
-    This class is used for showing the boundary which is forbidden for entering.
     """
-
+    
+    """
     name: str = 'indication_area'
     num: int = 8
-    x_width = 1.0
-    y_width = 2.0
+    x_width: float = 1.0
+    y_width: float = 2.0
     placements: list = None
     locations: list = field(default_factory=list)  # Fixed locations to override placements
     keepout: float = 0.0
@@ -44,7 +42,7 @@ class IndicationArea(Geom):  # pylint: disable=too-many-instance-attributes
     is_lidar_observed: bool = False
     is_constrained: bool = False
     is_meshed: bool = False
-    mesh_name: str = name[:-1]
+    mesh_name: str = name
 
     def get_config(self, xy_pos, rot):  # pylint: disable=unused-argument
         """To facilitate get specific config for this object."""
