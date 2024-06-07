@@ -73,9 +73,6 @@ class IndicationArea(Geom):  # pylint: disable=too-many-instance-attributes
             )
         return body
 
-    def cal_cost(self):
-        return 0
-
     @property
     def pos(self):
         """Helper to get list of Sigwalls positions."""
