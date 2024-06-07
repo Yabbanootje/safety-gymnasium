@@ -29,6 +29,7 @@ class IndicationArea(Geom):  # pylint: disable=too-many-instance-attributes
     
     """
     name: str = 'indication_area'
+    num: int = 0
     x_width: float = 1.0
     y_width: float = 2.0
     placements: list = None
@@ -74,4 +75,6 @@ class IndicationArea(Geom):  # pylint: disable=too-many-instance-attributes
 
     @property
     def pos(self):
-        """Helper to get list of Sigwalls positions."""
+        """Helper to get the area positions from layout."""
+        # pylint: disable-next=no-member
+        return [self.engine.data.body(f'{self.name[:-1]}{i}').xpos.copy() for i in range(self.num)]
