@@ -29,7 +29,6 @@ class IndicationArea(Geom):  # pylint: disable=too-many-instance-attributes
     
     """
     name: str = 'indication_area'
-    num: int = 8
     x_width: float = 1.0
     y_width: float = 2.0
     placements: list = None
