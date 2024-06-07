@@ -47,7 +47,7 @@ class IndicationArea(Geom):  # pylint: disable=too-many-instance-attributes
         """To facilitate get specific config for this object."""
         body = {
             'name': self.name,
-            'pos': np.r_[xy_pos],
+            'pos': np.r_[xy_pos, 0.01],
             'rot': 0,
             'geoms': [
                 {
