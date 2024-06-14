@@ -31,10 +31,10 @@ class IndicationArea(Geom):  # pylint: disable=too-many-instance-attributes
     name: str = 'indication_area'
     num: int = 0
     x_width: float = 1.0
-    y_width: float = 2.0
+    y_width: float = 1.0
     placements: list = None
     locations: list = field(default_factory=list)  # Fixed locations to override placements
-    keepout: float = 0.0
+    keepout: float = -1000.0 # allows for placing other attributes on top
 
     color: np.array = COLOR['sigwall']
     alpha: float = 0.1
@@ -49,7 +49,7 @@ class IndicationArea(Geom):  # pylint: disable=too-many-instance-attributes
         body = {
             'name': self.name,
             'pos': np.r_[xy_pos, 0.01],
-            'rot': 0,
+            'rot': rot,
             'geoms': [
                 {
                     'name': self.name,
